@@ -11,3 +11,12 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
 fi
 
 # Customize to your needs...
+bindkey -v
+bindkey "^R" history-incremental-pattern-search-backward
+bindkey "^L" autosuggest-accept
+
+eval "$(starship init zsh)"
+
+export STARSHIP_CONFIG="$HOME/.zprezto/starship.toml" 
+export VISUAL=vim
+export EDITOR=vim
