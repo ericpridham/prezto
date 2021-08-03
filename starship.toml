@@ -1,3 +1,14 @@
-[git_metrics]
+[vagrant]
+disabled = true
+
+[shell]
+disabled = true
+
+[cmd_duration]
+show_milliseconds = true
+
+[status]
 disabled = false
 
+[git_metrics]
+disabled = false

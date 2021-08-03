@@ -20,3 +20,4 @@ eval "$(starship init zsh)"
 export STARSHIP_CONFIG="$HOME/.zprezto/starship.toml" 
 export VISUAL=vim
 export EDITOR=vim
+export PATH=.:/Users/ericpridham/bin:~/.composer/vendor/bin:$PATH
