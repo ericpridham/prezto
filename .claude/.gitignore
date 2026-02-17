@@ -1,0 +1,24 @@
+# Claude workflow/runtime data
+cache/
+paste-cache/
+debug/
+file-history/
+history.jsonl
+plans/
+projects/
+session-env/
+shell-snapshots/
+stats-cache.json
+statsig/
+tasks/
+telemetry/
+todos/
+usage-data/
+
+# IDE
+.idea/
+ide/
+
+# Plugins runtime data
+plugins/known_marketplaces.json
+plugins/marketplaces/
