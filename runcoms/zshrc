@@ -21,12 +21,15 @@ export STARSHIP_CONFIG="$HOME/.zprezto/starship.toml"
 export VISUAL=vim
 export EDITOR=vim
 export PATH=.:/Users/ericpridham/bin:~/.composer/vendor/bin:$PATH
+#export DOCKER_DEFAULT_PLATFORM=linux/amd64/v8
+export PCOV_ENABLE=
 
 alias z="fasd_cd -d"
+alias ls="ls -F --color"
 
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
 # Automatically calls nvm use when in a directory with a .nvmrc file
 autoload -U add-zsh-hook
@@ -62,3 +65,16 @@ autoload -U add-zsh-hook
 add-zsh-hook chpwd source_env
 
 source_env
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+
+# pnpm
+export PNPM_HOME="/Users/ericpridham/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+export PATH="/Users/ericpridham/.config/herd-lite/bin:$PATH"
+export PHP_INI_SCAN_DIR="/Users/ericpridham/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"
