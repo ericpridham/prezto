@@ -9,4 +9,6 @@
 if [[ ( "$SHLVL" -eq 1 && ! -o LOGIN ) && -s "${ZDOTDIR:-$HOME}/.zprofile" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprofile"
 fi
-source "/Users/ericpridham/.rover/env"
+if [ -f "/Users/ericpridham/.rover/env" ]; then
+    source "/Users/ericpridham/.rover/env"
+fi
