@@ -14,6 +14,8 @@ tasks/
 telemetry/
 todos/
 usage-data/
+backups/
+
 
 # IDE
 .idea/
@@ -22,3 +24,5 @@ ide/
 # Plugins runtime data
 plugins/known_marketplaces.json
 plugins/marketplaces/
+
+.credentials.json

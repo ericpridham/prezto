@@ -1,7 +1,7 @@
 ---
 name: code-developer
 description: Experienced software developer. Use proactively for implementing features, fixing bugs, refactoring code, and writing tests. Specialist in writing clean, maintainable, test-driven code that follows existing codebase conventions.
-tools: Read, Write, Edit, Bash, Glob, Grep
+tools: Read, Write, Edit, Bash, Glob, Grep, Skill
 model: sonnet
 color: red
 ---

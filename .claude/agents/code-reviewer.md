@@ -2,7 +2,7 @@
 name: code-reviewer
 description: Reviews all staged git changes for quality, maintainability, and codebase consistency. Use **proactively** before committing code to catch deviations from established patterns, missed reuse opportunities, and quality issues. Specialist for reviewing staged changes against existing codebase conventions.
 tools: Read, Glob, Grep, Bash
-model: claude-4.6
+model: opus
 color: green
 permissionMode: plan
 ---
