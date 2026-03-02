@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Get OAuth token from macOS Keychain
+creds=$(security find-generic-password -s "Claude Code-credentials" -w 2>/dev/null) || {
+  echo "Error: Could not read 'Claude Code-credentials' from Keychain" >&2
+  exit 1
+}
+
+token=$(echo "$creds" | jq -r '.claudeAiOauth.accessToken // empty') || {
+  echo "Error: Failed to parse credentials JSON" >&2
+  exit 1
+}
+
+if [[ -z "$token" ]]; then
+  echo "Error: No accessToken found in credentials" >&2
+  exit 1
+fi
+
+# Fetch usage data
+curl -sf "https://api.anthropic.com/api/oauth/usage" \
+  -H "Authorization: Bearer $token" \
+  -H "anthropic-beta: oauth-2025-04-20" \
+  | jq .
