@@ -1,23 +1,29 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-TTL_MINUTES=${1:-5}
-TTL_SECONDS=$(( TTL_MINUTES * 60 ))
 CACHE_FILE="/tmp/claude-usage-cache.json"
+CHECK_INTERVAL=300  # 5 minutes
 
-# Output cache JSON with cache_age_seconds injected
+now=$(date +%s)
+
+# Output cache JSON with live cache_age_seconds
 emit() {
-  local age=0
-  if [[ -f "$CACHE_FILE" ]]; then
-    age=$(( $(date +%s) - $(stat -f %m "$CACHE_FILE") ))
-  fi
-  jq --argjson age "$age" '. + {cache_age_seconds: $age}' "$CACHE_FILE"
+  local cached_at
+  cached_at=$(jq -r '.cached_at // 0' "$CACHE_FILE")
+  jq --argjson age "$(( now - cached_at ))" '. + {cache_age_seconds: $age}' "$CACHE_FILE"
 }
 
-# Output cache if fresh enough
+# Bump next_check_at without changing cached_at (for error backoff)
+bump_next_check() {
+  local tmp="${CACHE_FILE}.$$"
+  jq --argjson t "$(( now + CHECK_INTERVAL ))" '.next_check_at = $t' "$CACHE_FILE" > "$tmp" \
+    && mv -f "$tmp" "$CACHE_FILE"
+}
+
+# Skip fetch if next check is in the future
 if [[ -f "$CACHE_FILE" ]]; then
-  file_age=$(( $(date +%s) - $(stat -f %m "$CACHE_FILE") ))
-  if (( file_age < TTL_SECONDS )); then
+  next_check=$(jq -r '.next_check_at // 0' "$CACHE_FILE")
+  if (( now < next_check )); then
     emit
     exit 0
   fi
@@ -26,19 +32,19 @@ fi
 # Get OAuth token from macOS Keychain
 creds=$(security find-generic-password -s "Claude Code-credentials" -w 2>/dev/null) || {
   echo "Error: Could not read 'Claude Code-credentials' from Keychain" >&2
-  [[ -f "$CACHE_FILE" ]] && { emit; exit 0; }
+  [[ -f "$CACHE_FILE" ]] && { bump_next_check; emit; exit 0; }
   exit 1
 }
 
 token=$(echo "$creds" | jq -r '.claudeAiOauth.accessToken // empty') || {
   echo "Error: Failed to parse credentials JSON" >&2
-  [[ -f "$CACHE_FILE" ]] && { emit; exit 0; }
+  [[ -f "$CACHE_FILE" ]] && { bump_next_check; emit; exit 0; }
   exit 1
 }
 
 if [[ -z "$token" ]]; then
   echo "Error: No accessToken found in credentials" >&2
-  [[ -f "$CACHE_FILE" ]] && { emit; exit 0; }
+  [[ -f "$CACHE_FILE" ]] && { bump_next_check; emit; exit 0; }
   exit 1
 fi
 
@@ -53,11 +59,15 @@ body=$(echo "$response" | sed '$d')
 if [[ "$http_code" -lt 200 || "$http_code" -ge 300 ]]; then
   echo "Error: API returned HTTP $http_code" >&2
   echo "$body" >&2
-  [[ -f "$CACHE_FILE" ]] && { emit; exit 0; }
+  [[ -f "$CACHE_FILE" ]] && { bump_next_check; emit; exit 0; }
   exit 1
 fi
 
-# Atomic write: temp file + mv to avoid partial reads
+# Atomic write with timestamps
 tmp="${CACHE_FILE}.$$"
-echo "$body" | jq . > "$tmp" && mv -f "$tmp" "$CACHE_FILE"
+echo "$body" | jq \
+  --argjson cached_at "$now" \
+  --argjson next_check "$(( now + CHECK_INTERVAL ))" \
+  '. + {cached_at: $cached_at, next_check_at: $next_check}' \
+  > "$tmp" && mv -f "$tmp" "$CACHE_FILE"
 emit
