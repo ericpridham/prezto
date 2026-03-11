@@ -1,24 +1,63 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+TTL_MINUTES=${1:-5}
+TTL_SECONDS=$(( TTL_MINUTES * 60 ))
+CACHE_FILE="/tmp/claude-usage-cache.json"
+
+# Output cache JSON with cache_age_seconds injected
+emit() {
+  local age=0
+  if [[ -f "$CACHE_FILE" ]]; then
+    age=$(( $(date +%s) - $(stat -f %m "$CACHE_FILE") ))
+  fi
+  jq --argjson age "$age" '. + {cache_age_seconds: $age}' "$CACHE_FILE"
+}
+
+# Output cache if fresh enough
+if [[ -f "$CACHE_FILE" ]]; then
+  file_age=$(( $(date +%s) - $(stat -f %m "$CACHE_FILE") ))
+  if (( file_age < TTL_SECONDS )); then
+    emit
+    exit 0
+  fi
+fi
+
 # Get OAuth token from macOS Keychain
 creds=$(security find-generic-password -s "Claude Code-credentials" -w 2>/dev/null) || {
   echo "Error: Could not read 'Claude Code-credentials' from Keychain" >&2
+  [[ -f "$CACHE_FILE" ]] && { emit; exit 0; }
   exit 1
 }
 
 token=$(echo "$creds" | jq -r '.claudeAiOauth.accessToken // empty') || {
   echo "Error: Failed to parse credentials JSON" >&2
+  [[ -f "$CACHE_FILE" ]] && { emit; exit 0; }
   exit 1
 }
 
 if [[ -z "$token" ]]; then
   echo "Error: No accessToken found in credentials" >&2
+  [[ -f "$CACHE_FILE" ]] && { emit; exit 0; }
   exit 1
 fi
 
 # Fetch usage data
-curl -sf "https://api.anthropic.com/api/oauth/usage" \
+response=$(curl -s -w "\n%{http_code}" "https://api.anthropic.com/api/oauth/usage" \
   -H "Authorization: Bearer $token" \
-  -H "anthropic-beta: oauth-2025-04-20" \
-  | jq .
+  -H "anthropic-beta: oauth-2025-04-20")
+
+http_code=$(echo "$response" | tail -1)
+body=$(echo "$response" | sed '$d')
+
+if [[ "$http_code" -lt 200 || "$http_code" -ge 300 ]]; then
+  echo "Error: API returned HTTP $http_code" >&2
+  echo "$body" >&2
+  [[ -f "$CACHE_FILE" ]] && { emit; exit 0; }
+  exit 1
+fi
+
+# Atomic write: temp file + mv to avoid partial reads
+tmp="${CACHE_FILE}.$$"
+echo "$body" | jq . > "$tmp" && mv -f "$tmp" "$CACHE_FILE"
+emit
