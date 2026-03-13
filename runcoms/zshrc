@@ -17,50 +17,16 @@ bindkey "^L" autosuggest-accept
 
 eval "$(starship init zsh)"
 
-export STARSHIP_CONFIG="$HOME/.zprezto/starship.toml"
-export VISUAL=mvim
-export EDITOR=mvim
-export PATH=.:$HOME/bin:$HOME/.npm-global/bin:~/.composer/vendor/bin:/Users/ericpridham/bin:~/.composer/vendor/bin:$PATH:$HOME/.cargo/bin:$HOME/.local/bin
-
-source secrets
-
 alias s="vendor/bin/sail"
 
 alias z="fasd_cd -d"
 alias ls="ls -F --color"
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+alias yoco="claude --dangerously-skip-permissions"
 
-# Automatically calls nvm use when in a directory with a .nvmrc file
-autoload -U add-zsh-hook
-load-nvmrc() {
-  local node_version="$(nvm version)"
-  local nvmrc_path="$(nvm_find_nvmrc)"
-
-## Automatically calls nvm use when in a directory with a .nvmrc file
-#autoload -U add-zsh-hook
-#load-nvmrc() {
-#  local node_version="$(nvm version)"
-#  local nvmrc_path="$(nvm_find_nvmrc)"
-#
-#  if [ -n "$nvmrc_path" ]; then
-#    local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
-#
-#    if [ "$nvmrc_node_version" = "N/A" ]; then
-#      nvm install
-#    elif [ "$nvmrc_node_version" != "$node_version" ]; then
-#      nvm use
-#    fi
-#  elif [ "$node_version" != "$(nvm version default)" ]; then
-#    echo "Reverting to nvm default version"
-#    nvm use default
-#  fi
-#}
-#
-#add-zsh-hook chpwd load-nvmrc
-#load-nvmrc
+# nvm shell integration
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
 
 # Automatically uses the `.env` file if it exists in a directory
 source_env() {
@@ -76,20 +42,5 @@ source_env
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
-
-# pnpm
-export PNPM_HOME="/Users/ericpridham/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
-export PATH="/Users/ericpridham/.config/herd-lite/bin:$PATH"
-export PHP_INI_SCAN_DIR="/Users/ericpridham/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"
-
 # bun completions
 [ -s "/Users/eric/.bun/_bun" ] && source "/Users/eric/.bun/_bun"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"

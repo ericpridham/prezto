@@ -17,12 +17,9 @@ fi
 # Editors
 #
 
-if [[ -z "$EDITOR" ]]; then
-  export EDITOR='nano'
-fi
-if [[ -z "$VISUAL" ]]; then
-  export VISUAL='nano'
-fi
+export EDITOR='vim'
+export VISUAL='vim'
+
 if [[ -z "$PAGER" ]]; then
   export PAGER='less'
 fi
@@ -54,6 +51,31 @@ path=(
   /usr/local/{,s}bin(N)
   $path
 )
+
+export PATH=.:$HOME/bin:$HOME/.npm-global/bin:~/.composer/vendor/bin:/Users/ericpridham/bin:~/.composer/vendor/bin:$PATH:$HOME/.cargo/bin:$HOME/.local/bin
+
+export STARSHIP_CONFIG="$HOME/.zprezto/starship.toml"
+
+# Secrets (environment variables)
+source ~/.zprezto/runcoms/secrets
+
+# nvm
+export NVM_DIR="$HOME/.nvm"
+
+# pnpm
+export PNPM_HOME="/Users/ericpridham/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+
+# herd-lite
+export PATH="/Users/ericpridham/.config/herd-lite/bin:$PATH"
+export PHP_INI_SCAN_DIR="/Users/ericpridham/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
 
 #
 # Less
