@@ -1,0 +1,55 @@
+{
+  "version": 2,
+  "plugins": {
+    "atlassian@claude-plugins-official": [
+      {
+        "scope": "user",
+        "installPath": "/Users/ericpridham/.claude/plugins/cache/claude-plugins-official/atlassian/385c1469c567",
+        "version": "385c1469c567",
+        "installedAt": "2026-03-09T15:08:55.030Z",
+        "lastUpdated": "2026-03-18T17:17:48.291Z",
+        "gitCommitSha": "76c7671c4ded4af4615e1088146d910c7b6ffe76"
+      }
+    ],
+    "skillsky-api-builder@skillsky-claude-marketplace-preview": [
+      {
+        "scope": "user",
+        "installPath": "/Users/ericpridham/.claude/plugins/cache/skillsky-claude-marketplace-preview/skillsky-api-builder/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-03-19T15:21:16.633Z",
+        "lastUpdated": "2026-03-19T15:21:16.633Z",
+        "gitCommitSha": "be6740938799668a1367dcdd53875d1ba4ec2288"
+      }
+    ],
+    "daily-briefing@skillsky-claude-marketplace": [
+      {
+        "scope": "user",
+        "installPath": "/Users/ericpridham/.claude/plugins/cache/skillsky-claude-marketplace/daily-briefing/1.0.1",
+        "version": "1.0.1",
+        "installedAt": "2026-03-19T16:45:00.701Z",
+        "lastUpdated": "2026-03-19T16:45:00.701Z",
+        "gitCommitSha": "95f982eb0feaf9c04d2a558cd4fb2e10ee6d011a"
+      }
+    ],
+    "claude-usage@skillsky-claude-marketplace": [
+      {
+        "scope": "user",
+        "installPath": "/Users/ericpridham/.claude/plugins/cache/skillsky-claude-marketplace/claude-usage/1.0.0",
+        "version": "1.0.0",
+        "installedAt": "2026-03-19T16:45:20.066Z",
+        "lastUpdated": "2026-03-19T16:45:20.066Z",
+        "gitCommitSha": "95f982eb0feaf9c04d2a558cd4fb2e10ee6d011a"
+      }
+    ],
+    "cowsay@skillsky-claude-marketplace": [
+      {
+        "scope": "user",
+        "installPath": "/Users/ericpridham/.claude/plugins/cache/skillsky-claude-marketplace/cowsay/1.0.1",
+        "version": "1.0.1",
+        "installedAt": "2026-03-19T16:45:20.077Z",
+        "lastUpdated": "2026-03-19T16:45:20.077Z",
+        "gitCommitSha": "95f982eb0feaf9c04d2a558cd4fb2e10ee6d011a"
+      }
+    ]
+  }
+}

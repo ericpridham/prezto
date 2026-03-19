@@ -23,6 +23,7 @@ alias z="fasd_cd -d"
 alias ls="ls -F --color"
 
 alias yoco="claude --dangerously-skip-permissions"
+alias yocowo="claude --dangerously-skip-permissions --worktree"
 
 # nvm shell integration
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"

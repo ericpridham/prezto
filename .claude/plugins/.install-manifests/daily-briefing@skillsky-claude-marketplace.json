@@ -1,0 +1,10 @@
+{
+  "pluginId": "daily-briefing@skillsky-claude-marketplace",
+  "createdAt": "2026-03-11T18:53:58.888Z",
+  "files": {
+    ".claude-plugin/plugin.json": "d4cc9032ee8b96da10cf2a6cac5a701d02b130b957f36709a132da830a8f3c7b",
+    "README.md": "e06abc3cdef81a41eb149b1676ef45ae1ac3c388a4ca2212c6b8f42f53c34a97",
+    "commands/daily-briefing.md": "95190ba3afe168cf0ac068c45918b2cb39986ec7670fab11d128296cf32ffd54",
+    "skills/daily-briefing/SKILL.md": "b4ddb1beea7ef2e9812ccbb37203b6fe9fcfd6f626de83859c7191511fb44e92"
+  }
+}

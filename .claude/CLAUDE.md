@@ -1,7 +1,12 @@
-## Planning ##
+## General ##
 
-- Make the plan extremely concise. Sacrifice grammar for the sake of concision.
-- At the end of each plan, give me a list of unanswered questions, if any.
+- Make output concise. Sacrifice grammar for the sake of concision.
+- At the end of each plan, give me a list of unanswered questions using AskUserQuestions.
+
+## Sandbox ##
+
+- Never set `dangerouslyDisableSandbox` to true.
+- If a command fails due to sandbox restrictions, stop and ask the user rather than retrying unsandboxed.
 
 ## Workflows ##
 
@@ -9,7 +14,7 @@
 
 Follow this workflow when planning a change:
 
-1. Analyze the initial prompt and ask the user any decisions or clarifying questions. Do not make your own assumptions.
+1. Analyze the initial prompt and ask the user any decisions or clarifying questions use AskUserQuestions. Do not make your own assumptions.
 2. Break down the plan into reasonable phases.
 3. For each phase, write out a detailed implementation plan into a reasonably named subdirectory of `docs/plans/`
 4. When asked to implement a phase, break the plan into discrete tasks to be implemented by subagents, parallelizing them as you can.

@@ -1,4 +1,7 @@
 {
+  "env": {
+    "DISABLE_AUTOUPDATER": "1"
+  },
   "permissions": {
     "allow": [
       "WebFetch(domain:docs.anthropic.com)",
@@ -79,7 +82,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "osascript -e 'display notification \"Claude Code needs your attention\" with title \"Claude Code\"'"
+            "command": "~/.claude/notify.sh 'Waiting for permission approval' &"
           }
         ]
       },
@@ -88,7 +91,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "osascript -e 'display notification \"Claude Code needs your attention\" with title \"Claude Code\"'"
+            "command": "~/.claude/notify.sh 'Has a question for you' &"
           }
         ]
       },
@@ -97,7 +100,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "osascript -e 'display notification \"Claude Code needs your attention\" with title \"Claude Code\"'"
+            "command": "~/.claude/notify.sh 'Task complete, awaiting input' &"
           }
         ]
       }
@@ -107,8 +110,31 @@
     "type": "command",
     "command": "~/.claude/statusline.sh"
   },
+  "enabledPlugins": {
+    "atlassian@claude-plugins-official": true,
+    "skillsky-api-builder@skillsky-claude-marketplace-preview": true,
+    "daily-briefing@skillsky-claude-marketplace": true,
+    "claude-usage@skillsky-claude-marketplace": true,
+    "cowsay@skillsky-claude-marketplace": true
+  },
+  "extraKnownMarketplaces": {
+    "skillsky-claude-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "continued-llc/skillsky-claude-marketplace",
+        "ref": "main"
+      }
+    },
+    "skillsky-claude-marketplace-preview": {
+      "source": {
+        "source": "github",
+        "repo": "continued-llc/skillsky-claude-marketplace",
+        "ref": "preview"
+      },
+      "installLocation": "/Users/ericpridham/.claude/plugins/marketplaces/skillsky-claude-marketplace-preview"
+    }
+  },
   "sandbox": {
-    "enabled": true,
     "autoAllowBashIfSandboxed": true
   },
   "skipDangerousModePermissionPrompt": true

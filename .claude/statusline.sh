@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Path to the claude-usage script from the plugin.
+# Update this after copying the template to ~/.claude/statusline.sh
+CLAUDE_USAGE="${CLAUDE_USAGE:-/Users/ericpridham/.claude/plugins/cache/skillsky-claude-marketplace/claude-usage/1.0.0/bin/claude-usage}"
+
 input=$(cat)
 model=$(echo "$input" | jq -r '.model.display_name')
 project=$(echo "$input" | jq -r '.workspace.project_dir' | xargs basename)
@@ -29,7 +33,7 @@ bar_length=10
 
 # Claude usage meter (extra usage monthly)
 claude_pct=""
-usage_json=$("$HOME/bin/claude-usage" 2>/dev/null) || true
+usage_json=$("$CLAUDE_USAGE" 2>/dev/null) || true
 if [ -n "$usage_json" ]; then
   claude_pct=$(echo "$usage_json" | jq -r '.extra_usage.utilization // empty')
 fi
@@ -37,6 +41,7 @@ fi
 if [ -n "$claude_pct" ]; then
   claude_int=$(printf "%.0f" "$claude_pct")
   filled=$((claude_int * bar_length / 100))
+  (( filled > bar_length )) && filled=$bar_length
   claude_bar="["
   for ((i = 0; i < filled; i++)); do claude_bar+="█"; done
   for ((i = filled; i < bar_length; i++)); do claude_bar+="░"; done
@@ -59,8 +64,13 @@ if [ -n "$claude_pct" ]; then
     claude_color="\033[1;31m"
   fi
 
-  printf "\033[1;34m%s\033[0m │ \033[1;36m%s\033[0m │ %b%s\033[0m │ %b%s\033[0m" \
-    "$model" "$project" "$color" "$meter" "$claude_color" "$claude_bar"
+  need_more="\033[0m"
+  if [ "$claude_int" -ge 50 ]; then
+    need_more=" \033[2;37m\033]8;;https://lacalle-group.slack.com/archives/C0ADEK0F8GH/p1773154836016559\033\\Need more?\033]8;;\033\\\033[0m"
+  fi
+
+  printf "\033[1;34m%s\033[0m │ \033[1;36m%s\033[0m │ %b%s\033[0m │ %b%s%b" \
+    "$model" "$project" "$color" "$meter" "$claude_color" "$claude_bar" "$need_more"
 else
   printf "\033[1;34m%s\033[0m │ \033[1;36m%s\033[0m │ %b%s\033[0m" \
     "$model" "$project" "$color" "$meter"
